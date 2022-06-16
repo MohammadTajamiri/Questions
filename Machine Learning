@@ -1,2 +1,46 @@
 import pandas as pd
-X=y
+import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn import metrics
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.naive_bayes import MultinomialNB
+from nltk.tokenize import word_tokenize
+from nltk.corpus import stopwords
+from sklearn.linear_model import LogisticRegression
+#Reading The Data
+data=pd.read_csv("data.csv")
+#Target and feature Variables:
+y=data["label"] #label
+X=data["question"]
+#test and train split:
+X_train,X_test,y_train,y_test=train_test_split(X,y,test_size=0.3,random_state=50)
+#makind count Vector
+count_vectorizer=CountVectorizer(stop_words="english")
+count_train=count_vectorizer.fit_transform(X_train.values)
+count_test=count_vectorizer.transform(X_test.values)
+#Using Logistic Regression for Classification:
+LR=LogisticRegression()
+LR.fit(count_train,y_train)
+pred=LR.predict(count_test)
+metrics.accuracy_score(y_test,pred)
+#Using Confusion Matrix for Checking Accuracy
+metrics.confusion_matrix(y_test,pred,labels=[-1,1])
+#Input
+x=input("How Many Input Do you want to have?")
+i=0
+val=[]
+while i<int(x):
+    val.append(input("Let me Check your sentence..."))
+    i=i+1
+print(val)
+#Output and Checking Checking the Giving sentecne Grammer
+df = pd.DataFrame(val, columns=['Numbers'])
+count_train=count_vectorizer.transform(df.values.ravel())
+results=LR.predict(count_train)
+i=0
+while i <len(df.values):
+    if results[i] == 1:
+        print(f"{df.values[i]} grammer is Correct " )
+    else:
+        print(f"{df.values[i]} grammer is InCorrect " )
+    i=i+1
