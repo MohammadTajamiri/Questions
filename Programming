@@ -1,0 +1,48 @@
+import numpy as np
+import re
+from hazm import *
+#Reading the File
+text=[]
+with open("input.txt",'r',encoding="utf-8") as file:
+    for line in file:
+        text.append( line.strip().split('.'))
+#Making text To sentences:
+sentence=list(np.concatenate(text).flat)
+for i in sentence:
+    if i == "":
+        sentence.remove(i)
+#Making Sentences to Words:
+words=[]
+for j in sentence:
+    words.append(j.strip().split(' '))
+#Task 1: Omitting Sentences With 50 words of less than 10 words:
+i=0
+while i < len(words):
+    if (len(words[i]) > 50) or (len(words[i]) <10):
+        words.pop(i)
+    i=i+1
+#Removing Arabic Words Using Regex:
+i=0
+while i<len(sentence):
+    sentence[i]=re.sub(r"ة","ه",sentence[i])
+    sentence[i]=re.sub(r"ك","ک",sentence[i])
+    sentence[i]=re.sub(r"ي","ی",sentence[i])
+    i=i+1
+sentence
+#Removin Nim Fasele Using Hasm:
+i=0
+while i<len(sentence):
+    normalizer = Normalizer()
+    sentence[i]=normalizer.normalize (sentence[i])
+    i=i+1
+for i in sentence:
+    print(i)
+#Replacing Character Task Number 3
+pattern = r'[۱۲۳۴۵۶۷۸۹۰ضصثقفغعهخحجچشسیبلاتنمکگظطزرذدپو]'
+i=0
+while i<len(sentence):
+    re.sub(pattern, '', sentence[2])
+    i=i+1
+for i in sentence:
+    print(i)
+print(sentence[2])
